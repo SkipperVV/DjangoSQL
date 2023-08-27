@@ -14,17 +14,10 @@ CREATE TABLE products (
 '''
 
 
-class Order(models.Model):
-    name = models.CharField(max_length=255)
-
-
 class Product(models.Model):
     name = models.CharField(max_length=255)
     price = models.FloatField(default=0.0)  # Not Null ставится автоматически
 
-
-class ProductOrder(models.Model):
-    name = models.CharField(max_length=255)
 
 ''' Мы указали, что это строковое поле сейчас должно быть всегда ограничено двумя символами 
 (как в переменных соответствующих должностям). Однако присвоить этому полю мы можем значения 
@@ -47,6 +40,8 @@ POSITIONS = [
     (cashier, 'Кассир'),
     (cleaner, 'Уборщик')
 ]
+
+
 class Staff(models.Model):
     full_name = models.CharField(max_length=255)
     labor_contract = models.IntegerField(default=0)
@@ -55,9 +50,36 @@ class Staff(models.Model):
                                 default=cashier)
 
 
-'''Скрипт НЕ ЗАПУСКАТЬ!!!
-Не забудь
+class Order(models.Model):
+    name = models.CharField(max_length=255)
+    time_in = models.DateTimeField(auto_now_add=True)
+    time_out = models.DateTimeField(null=True)
+    cost = models.FloatField(default=0)
+    take_away = models.BooleanField(default=False)
+    complete = models.BooleanField(default=False)
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+
+    products = models.ManyToManyField(Product, through='ProductOrder')
+    # для ManyToMany требуется отдельная таблица ProductOrder
+
+
+class ProductOrder(models.Model):
+    amount = models.IntegerField(default=1)
+    order = models.ForeignKey('Order', on_delete=models.CASCADE)  # Если на Order ссылаются раньше его объявления-
+    # в кавычки 'Order' или перенести в конец
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    def product_sum(self):
+        product_price=self.product.price
+        return product_price*self.amount
+
+
+
+'''
+После изменения кода в models.py удалить записи миграции проекта из "migrations" и удалить все таблицы в DBeaver
+Скрипт models.py НЕ ЗАПУСКАТЬ!!!
+Конвертнуть код в SQL с помощью Django:
 python manage.py makemigrations
-и применить миграцию
+и применить полученный код SQL к базе:
 python manage.py migrate
 '''
