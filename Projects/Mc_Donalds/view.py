@@ -12,5 +12,9 @@ direct = Staff.objects.create(full_name="Максимов Максим Макс�
 
 potato_free_standart = Product(name='Картофель фри (станд.)', price=93.0)
 potato_free_standart.save()
+
 potato_free_big = Product.objects.create(name="Картофель фри (бол.)", price=106.0)
 potato_free_big.save()
+
+salad_small = Product.objects.create(name="Салат. мал порция", price=75.0)
+salad_small.save()

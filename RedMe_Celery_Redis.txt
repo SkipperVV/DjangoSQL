@@ -28,3 +28,49 @@ __all__ = ('celery_app',)
 
 ***********************************
 Установить Redis и настроить его для работы с Celery.
+
+Redis   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+Создаем Database на сайте Redis.io
+Вход по Google регистрации
+
+https://app.redislabs.com/
+Новая база "McDonalds"
+Default user password: 3J6YKt9fQIaye8krHHY1kmUDwFBKAUCy
+Public endpoint: redis-10049.c100.us-east-1-4.ec2.cloud.redislabs.com:10049
+
+Грузим редис в виртуалку
+pip3 install redis
+
+Добавляем а apps.py
+import redis
+red=redis.Redis(
+    host= 'redis-10049.c100.us-east-1-4.ec2.cloud.redislabs.com',
+    port=10049,
+    password='3J6YKt9fQIaye8krHHY1kmUDwFBKAUCy'
+)
+Проверяем подключени. В терминале :
+(venv) PS C:\DjangoSQL\Projects\Mc_Donalds> python -i apps.py
+
+>>> red
+видим- Redis<ConnectionPool<Connection<host=redis-10049.c100.us-east-1-4.ec2.cloud.redislabs.com,port=10049,db=0>>>
+-подключились. Создадим объект red
+>>> red.set('var1','some value')
+-True - сохранили, получим
+>>> red.get('var1') 
+b'some value'
+
+ добавить некоторые настройки в конфигурацию проекта (settings.py), дописав следующие строки:
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+ И, наконец, попробуем запустить локальный сервер Django и Celery. 
+ Для этого вы должны иметь два окна терминала. В одном из них, как и обычно, 
+ вы должны запустить Django: 
+ python3 manage.py runserver
+
+А в другом — запустить Celery: 
+(venv) PS C:\DjangoSQL\Projects> celery -A Projects worker -l INFO --pool=solo
