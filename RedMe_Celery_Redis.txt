@@ -68,6 +68,10 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
  И, наконец, попробуем запустить локальный сервер Django и Celery. 
+ 
+ Сначала надо запустить Redis сервер от имени администратора:
+ D:\Programming\SkillFactory. Номер группы- PDEV-31\Distrib\Redis\redis-server.exe
+
  Для этого вы должны иметь два окна терминала. В одном из них, как и обычно, 
  вы должны запустить Django: 
  python3 manage.py runserver

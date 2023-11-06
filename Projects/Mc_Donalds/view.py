@@ -1,7 +1,8 @@
-from Mc_Donalds.models import *
+from models import *
+from resources import *
 
 cashier1 = Staff.objects.create(full_name="Иванов Иван Иванович",
-                                position= cashier,
+                                position=cashier,
                                 labor_contract=1754)
 cashier2 = Staff.objects.create(full_name="Петров Петр Петрович",
                                 position=cashier,
