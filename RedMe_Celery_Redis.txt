@@ -80,6 +80,8 @@ python3 manage.py runserver
 А в другом — запустить Celery: 
 (venv) PS C:\DjangoSQL\Projects> celery -A Projects worker -l INFO --pool=solo
 
+Разберёмся, что мы вообще делаем этой командой. Мы говорим Celery запустить воркер (worker) для приложения
+(флаг -A означает application) с именем mcdonalds. Последний флаг -l и его значение INFO указывает, что именно выводить в лог консоли.
 -----------------------------------------------------------
 class IndexView(View):
     def get(self, request):

@@ -4,32 +4,6 @@ from datetime import datetime
 from django.db import models
 
 '''
-Открыть models.py, где создать новую модель (таблицу) с помощью django
-аналогичную с:
-
-CREATE TABLE products (
-	id BIGSERIAL PRIMARY KEY,
-	name TEXT NOT NULL UNIQUE,
-	price FLOAT CHECK (price > 0),
-	vendor_id BIGINT REFERENCES vendors(id),
-	manufacturers_id BIGINT REFERENCES manufacturers(id)
-'''
-''' Мы указали, что это строковое поле сейчас должно быть всегда ограничено двумя символами
-(как в переменных соответствующих должностям). Однако присвоить этому полю мы можем значения
-только из кортежей, который состоит из двух элементов. Первый элемент — это наше краткое обозначение
-должности, которое будет храниться в базе данных, а второй элемент — отображаемое значение этого поля
-(как и где оно будет отображаться, рассмотрим позже). По умолчанию мы установили, что должность
-будет — кассир (cashier). Такой подход защищает нас от возможных случайных вставок должностей,
-которых в реальности не существует. Удобно, согласитесь?'''
-
-
-class Product(models.Model):
-    name = models.CharField(max_length=255)
-    price = models.FloatField(default=0.0)  # Not Null ставится автоматически
-    def __str__(self):
-        return self.name + '/' + str(self.price)
-
-
 class Staff(models.Model):
     director = 'DI'
     admin = 'AD'
@@ -52,6 +26,34 @@ class Staff(models.Model):
 
     def get_last_name(self):
         return self.full_name.split()[0]
+'''
+
+'''
+Открыть models.py, где создать новую модель (таблицу) с помощью django
+аналогичную с:
+
+CREATE TABLE products (
+	id BIGSERIAL PRIMARY KEY,
+	name TEXT NOT NULL UNIQUE,
+	price FLOAT CHECK (price > 0),
+	vendor_id BIGINT REFERENCES vendors(id),
+	manufacturers_id BIGINT REFERENCES manufacturers(id)
+'''
+''' Мы указали, что это строковое поле сейчас должно быть всегда ограничено двумя символами
+(как в переменных соответствующих должностям). Однако присвоить этому полю мы можем значения
+только из кортежей, который состоит из двух элементов. Первый элемент — это наше краткое обозначение
+должности, которое будет храниться в базе данных, а второй элемент — отображаемое значение этого поля
+(как и где оно будет отображаться, рассмотрим позже). По умолчанию мы установили, что должность
+будет — кассир (cashier). Такой подход защищает нас от возможных случайных вставок должностей,
+которых в реальности не существует. Удобно, согласитесь?'''
+
+
+class Product(models.Model):
+    name = models.CharField(max_length=255)
+    price = models.FloatField(default=0.0)  # Not Null ставится автоматически
+
+    def __str__(self):
+        return self.name + ' Цена: ' + str(self.price)
 
 
 class Order(models.Model):
@@ -61,7 +63,7 @@ class Order(models.Model):
     cost = models.FloatField(default=0)
     take_away = models.BooleanField(default=False)
     complete = models.BooleanField(default=False)
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    # staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
 
     products = models.ManyToManyField(Product, through='ProductOrder')
 
