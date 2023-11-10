@@ -26,6 +26,8 @@ CREATE TABLE products (
 class Product(models.Model):
     name = models.CharField(max_length=255)
     price = models.FloatField(default=0.0)  # Not Null ставится автоматически
+    def __str__(self):
+        return self.name + '/' + str(self.price)
 
 
 class Staff(models.Model):

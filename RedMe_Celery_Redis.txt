@@ -71,10 +71,30 @@ CELERY_RESULT_SERIALIZER = 'json'
  
  Сначала надо запустить Redis сервер от имени администратора:
  D:\Programming\SkillFactory. Номер группы- PDEV-31\Distrib\Redis\redis-server.exe
+ (Ярлык на рабочем столе)
 
  Для этого вы должны иметь два окна терминала. В одном из них, как и обычно, 
  вы должны запустить Django: 
- python3 manage.py runserver
+python3 manage.py runserver
 
 А в другом — запустить Celery: 
 (venv) PS C:\DjangoSQL\Projects> celery -A Projects worker -l INFO --pool=solo
+
+-----------------------------------------------------------
+class IndexView(View):
+    def get(self, request):
+        # printer.delay(10)
+        # printer.apply_async([10], countdown=5)
+        printer.apply_async([10], eta=datetime.now() + timedelta(seconds=5))
+        hello.delay()
+        return HttpResponse('Hello from view.py file!')
+
+Параметр countdown устанавливает время (в секундах), через которое задача должна начать выполняться.
+Укажем, что задача счётчика должна начаться через 5 секунд после того, как она была создана.
+Если countdown принимает целое число (количество секунд), то параметру eta требуется уже объект типа datetime.
+И есть ещё один, последний, параметр выполнения — expires.
+Он служит для того, чтобы убирать задачу из очереди по прошествии какого-то времени.
+который принимает datetime-объект или число. Первый вариант указывает на точное время, когда задача должна быть
+убрана из очереди, а второй — число, количество секунд, через которое задачу нужно убрать.
+-----------------------------------------------------------
+
