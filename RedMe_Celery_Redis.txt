@@ -78,7 +78,7 @@ CELERY_RESULT_SERIALIZER = 'json'
 python3 manage.py runserver
 
 А в другом — запустить Celery: 
-(venv) PS C:\DjangoSQL\Projects> celery -A Projects worker -l INFO --pool=solo
+(venv) PS C:\DjangoSQL\Projects> celery -A Projects worker -l INFO --pool=
 
 Разберёмся, что мы вообще делаем этой командой. Мы говорим Celery запустить воркер (worker) для приложения
 (флаг -A означает application) с именем mcdonalds. Последний флаг -l и его значение INFO указывает, что именно выводить в лог консоли.
@@ -99,4 +99,9 @@ class IndexView(View):
 который принимает datetime-объект или число. Первый вариант указывает на точное время, когда задача должна быть
 убрана из очереди, а второй — число, количество секунд, через которое задачу нужно убрать.
 -----------------------------------------------------------
+
+Для запуска "app.conf.beat_******"
+В третьем терминале-
+(venv) PS C:\DjangoSQL\Projects> celery -A Projects beat -l INFO
+
 

@@ -1,4 +1,6 @@
+from datetime import datetime,timedelta
 from celery import shared_task
+from  time import time, sleep
 
 from .models import Order
 
@@ -9,14 +11,21 @@ def complete_order(oid):
     order.complete = True
     order.save()
 
+@shared_task
+def clear_old():
+    old_orders = Order.objects.all().exclude(time_in__gt =
+                        datetime.now() - timedelta(minutes = 5))
+    old_orders.delete()
+
 # @shared_task
 # def hello():
 #     time.sleep(10)
 #     print("Hello, Vladimir, from tasks.py!")
 #
 #
-# @shared_task
-# def printer(N):
-#     for i in range(N):
-#         time.sleep(1)
-#         print(f'from task printer:  {i + 1}')
+@shared_task
+def printer(N):
+    # print(N)
+    for i in range(N):
+        # time.sleep(1)
+        print(f'from task printer:  {i + 1}')
